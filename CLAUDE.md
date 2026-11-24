@@ -59,7 +59,9 @@ The first line of this file imports `AGENTS.md`, which `create-next-app` generat
 - typescript: 5.9.3
 - stripe:
 - @supabase/supabase-js:
-- vitest:
+- vitest: 5.1.1
+- pg: 8.23.1
+- dotenv: 18.0.10
 - tailwindcss (major version matters; see rule 11): 4.3.3
   - Tailwind 4 is wired through `@tailwindcss/turbopack` (4.3.3), installed by `create-next-app` and accepted under SPEC §13.
 - BWAI brand kit: 1.1.0
