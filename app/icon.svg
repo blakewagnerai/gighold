@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="t">
+  <title id="t">BWAI</title>
+  <defs><linearGradient id="g" gradientUnits="userSpaceOnUse" x1="20" y1="0" x2="560" y2="0"><stop offset="0" stop-color="#22d3ee"/><stop offset="0.42" stop-color="#e8ebf0"/><stop offset="0.7" stop-color="#8b5cf6"/><stop offset="1" stop-color="#e935c1"/></linearGradient><radialGradient id="bg" cx="0.8" cy="0.1" r="1.1"><stop offset="0" stop-color="#1d1347"/><stop offset="0.45" stop-color="#0d0b26"/><stop offset="1" stop-color="#06060f"/></radialGradient></defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <g transform="translate(4.5 20.6) scale(0.0948)" fill="url(#g)" stroke="url(#g)">
+    <polygon stroke="none" points="20,19 215,19 215,50 40,50"/>
+    <path fill="none" stroke-width="31" stroke-linejoin="miter" stroke-miterlimit="6" d="M213,34.5 C246,34.5 260,52 271,74 L312,158 L365,76 L420,158 L540,-6"/>
+    <polygon stroke="none" points="66,99 192,99 192,130 50,130"/>
+    <path fill="none" stroke-width="31" d="M190,114.5 A35.5,35.5 0 0 1 190,185.5"/>
+    <polygon stroke="none" points="36,170 192,170 192,201 20,201"/>
+  </g>
+</svg>

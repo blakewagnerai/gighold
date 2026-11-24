@@ -1,0 +1,1 @@
+- Brand image weight (noted at M1.5): `public/brand/bwai-emblem.png` is 873 KB and `public/brand/bwai-stage-band.png` is 387 KB, served as-is because the kit markup uses plain `<img>`. Phones hide the emblem but may still download it. Idea: serve both through `next/image` so Next.js resizes and re-encodes them. Not built.
