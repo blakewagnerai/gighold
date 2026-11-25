@@ -57,8 +57,8 @@ The first line of this file imports `AGENTS.md`, which `create-next-app` generat
 - next: 16.4.6
 - react: 19.3.0
 - typescript: 5.9.3
-- stripe:
-- @supabase/supabase-js:
+- stripe: 23.2.0
+- @supabase/supabase-js: 2.119.2
 - vitest: 5.1.1
 - pg: 8.23.1
 - dotenv: 18.0.10
