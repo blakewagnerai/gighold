@@ -359,3 +359,64 @@ test(
   },
   TIMEOUT_MS,
 );
+
+// D7b (GigHold M3.0b) proves migration 0002_amount_default.sql: the database
+// sets the deposit, and the app's role cannot supply one.
+// Source: https://www.postgresql.org/docs/17/sql-revoke.html
+//   REVOKE INSERT ( column_name ) removes a column-level grant. It would have
+//   "no effect" if the role held INSERT on the whole table; 0001 never
+//   granted that, so naming amount_cents is refused after 0002.
+// Source: https://www.postgresql.org/docs/17/sql-grant.html
+// T-SQL: there is no DENY in Postgres. A role can do only what it has been
+// granted, so taking the column grant away is the whole mechanism.
+// A refused column still reports "permission denied for table bookings".
+// RETURNING needs SELECT on the returned columns; service_role has SELECT
+// on bookings from 0001.
+// This test fails at part (a) until 0002 has been applied to the database.
+test(
+  "D7b: role service_role cannot INSERT amount_cents; the default sets 15000",
+  async () => {
+    await withRollback(async (client) => {
+      await client.query("SET LOCAL ROLE service_role");
+      expect(await currentRole(client)).toBe("service_role");
+      await client.query("SAVEPOINT before_denied_insert");
+
+      // (a) naming amount_cents is refused.
+      await expectPgError(
+        client.query(
+          `insert into public.bookings
+             (customer_name, customer_email, event_date, amount_cents)
+           values ($1, $2, $3, $4)`,
+          [
+            "Test Customer",
+            "test.customer@example.com",
+            "2030-01-01",
+            DEPOSIT_CENTS,
+          ],
+        ),
+        "42501",
+        /permission denied for table bookings/,
+      );
+
+      await client.query("ROLLBACK TO SAVEPOINT before_denied_insert");
+      expect(await currentRole(client)).toBe("service_role");
+
+      // (b) naming only the three customer columns works, and the database
+      // fills in the amount and the status from the column defaults.
+      const result = await client.query<{
+        amount_cents: number;
+        status: string;
+      }>(
+        `insert into public.bookings
+           (customer_name, customer_email, event_date)
+         values ($1, $2, $3)
+         returning amount_cents, status`,
+        ["Test Customer", "test.customer@example.com", "2030-01-01"],
+      );
+      expect(result.rows).toHaveLength(1);
+      expect(result.rows[0].amount_cents).toBe(DEPOSIT_CENTS);
+      expect(result.rows[0].status).toBe("pending_payment");
+    });
+  },
+  TIMEOUT_MS,
+);

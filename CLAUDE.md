@@ -32,7 +32,7 @@ The first line of this file imports `AGENTS.md`, which `create-next-app` generat
    - **Next.js:** read the bundled docs in `node_modules/next/dist/docs/` first. They match the installed version. Cite the doc path or the matching nextjs.org URL.
    - **Stripe and Supabase:** use docs.stripe.com and supabase.com/docs. Cite the URL.
    - If the docs and your memory disagree, the docs win, and you tell me about the difference.
-7. **Money:** amounts are integers in cents. The deposit is a server-side constant. Never accept an amount from the client.
+7. **Money:** amounts are integers in cents. The deposit is set by the database (column default on bookings.amount_cents, migration 0002); app code never supplies an amount and reads it back with RETURNING. Never accept an amount from the client.
 8. **Status changes** happen only through the database functions `begin_capture`, `begin_cancel` and `apply_stripe_event`. App code never runs `UPDATE` or `DELETE` on `bookings`.
 9. **Server-only:** modules holding secrets (`lib/stripe.ts`, `lib/supabase.ts`) import `server-only`.
 10. **Don't edit** `SPEC.md` or this file unless the prompt explicitly says to. `AGENTS.md` belongs to Next.js; don't edit it either.
