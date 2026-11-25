@@ -2,3 +2,4 @@
 - Prices table (noted at M3.0b): migration 0002 sets the single $150 deposit as a column default on `bookings.amount_cents`. Idea, as a candidate for add-on A2: a `prices` table holding per-band deposits, replacing the 0002 default once there is more than one price. Not built.
 - bwai-brand kit 1.2: a form-field component (label, input, error text). Kit 1.1.0 has none; / composes bwai-inset, bwai-focusable and bwai-t-app-body. Post-build, through skill-vetting.
 - Disable the booking form's submit button after the first click (needs a client component). Today a double-click can create two bookings and two Checkout Sessions.
+- bwai-brand kit 1.2: a disabled-button style for `.bwai-btn`. Kit 1.1.0 has none, so a disabled button looks live; M5.2 shows the admin action words as plain text instead (Blake's decision). Post-build, through skill-vetting.
