@@ -2,7 +2,15 @@
 
 ## What it is
 
-<!-- PROSE: what it is (Blake) -->
+GigHold is a small demo app I built to demonstrate how I use Claude and Claude Code for vibe coding projects. It shows one Stripe payment pattern done properly: put a hold on a card, wait for a person to approve, then charge it. A customer asks a band to play a date and puts a $150 deposit on hold. The band approves, which charges the hold, or declines, which releases it. No money moves until someone decides.
+
+GigHold demonstrates four things. 
+- The card is held, not charged, until approval. 
+- A webhook that Stripe delivers twice is processed once. 
+- The database, not the app, decides which status changes are legal. 
+- There are tests for the money rules, including one that proves the app can't change a booking's status directly. It runs in Stripe's sandbox only. No real cards.
+
+GigHold is a BWAI Labs app, so it ships in my shop's own brand.
 
 ## Live demo and stack
 
@@ -181,4 +189,10 @@ This runs the unit tests and the database tests: 3 files, 14 tests. For the data
 
 ## How it was built
 
-<!-- PROSE: how it was built (Blake) -->
+I built GigHold with Claude Code over three days in November 2026, from a written spec that I produced with Claude before I started. I had never written TypeScript, Next.js or React before this build. I am a career developer.  My 20+ years of SQL Server are a big part of why the money rules live in Postgres.
+
+The process was deliberately slow. SPEC.md was frozen before the first line of code. CLAUDE.md holds the rules the agent works under: a dependency allowlist, docs before code, no direct UPDATE or DELETE on bookings, and no secrets in code. Each step was one prompt with an ID, a list of files the agent was allowed to touch, and a hard stop. I reviewed every plan, approved every file write, compared the agent's report against git status, and ran every acceptance check myself. A step wasn't done because the agent said so. Everything produced by Claude Code was double checked by Claude Desktop, and manual review was done by me.
+
+Two things changed along the way, and both are recorded above. The spec put the deposit amount in app code. While learning how Stripe amounts work, I moved it into the database, so the app can't write a different price. Then a test payment went through Stripe Link, which doesn't report when a hold expires, so Link is turned off.
+
+Where the agent's output and the official docs disagreed, the docs won, and the difference was recorded.
