@@ -8,11 +8,16 @@ A small demo app: Stripe authorize-then-capture, idempotent webhooks, and a Supa
 
 **`SPEC.md` is the source of truth. If SPEC.md doesn't say to build it, don't build it.**
 
+That holds for v1, which is tagged `v1.0`. **`SPEC_ADDENDUM.md` is the source of truth for add-on modules A1–A7.** An add-on is built only when its section there is marked APPROVED.
+
+Erratum: SPEC_ADDENDUM A2 §4 names the migration `0002_bands_and_rls.sql`; `0002` is already used by `0002_amount_default.sql`, so A2's migration is `0003_bands_and_rls.sql`.
+
 The first line of this file imports `AGENTS.md`, which `create-next-app` generated. It points to the Next.js docs bundled with the installed version. Leave that line and that file in place.
 
 ## How we work
 
 - **One step per prompt.** Each prompt has an ID like `[GigHold M3.2]`. Do only that step, then STOP and report: files changed, commands run, anything you were unsure of.
+- **Add-on prompts** use IDs like `[GigHold A2.3]`. Every module except A1 is built on its own git branch. SPEC_ADDENDUM.md §0's rules apply to every add-on.
 - **Plan first.** Use plan mode for any step that touches more than one file, and wait for approval before writing.
 - **Out-of-scope ideas** go as a line appended to `PARKING_LOT.md`. Never build them.
 - **The human, Blake, is new to TypeScript, Next.js, React, Stripe, Supabase and Vercel,** and is learning them during this build. In your report, explain any non-obvious choice in one or two plain sentences, and name the files and line ranges that matter most, so they can be walked through.
