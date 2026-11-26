@@ -2,7 +2,8 @@ import { expect, test } from "vitest";
 import type { Client } from "pg";
 import { withRollback } from "./db";
 
-// Database tests D1-D7 (SPEC.md section 11), GigHold M2.5.
+// Database tests D1-D7 and D7b (SPEC.md section 11; D7b added at M3.0b),
+// GigHold M2.5.
 //
 // Every test runs inside withRollback (tests/db.ts): BEGIN, the test body,
 // then always ROLLBACK and close the client. Nothing here persists.
@@ -28,9 +29,12 @@ const DEPOSIT_CENTS = 15000;
 const CAPTURE_BEFORE = "2030-01-08T00:00:00Z";
 
 /**
- * Inserts one booking and returns its id. It names only the four columns the
- * migration grants INSERT on, so status comes from the column default
- * ('pending_payment'). RETURNING is the Postgres form of T-SQL's OUTPUT.
+ * Inserts one booking and returns its id. It names four columns: the three
+ * that service_role may INSERT since migration 0002 (customer_name,
+ * customer_email, event_date) plus amount_cents. Setting amount_cents works
+ * here only because the test connection is the table owner; service_role is
+ * refused (D7b). status comes from the column default ('pending_payment').
+ * RETURNING is the Postgres form of T-SQL's OUTPUT.
  */
 async function insertBooking(client: Client): Promise<string> {
   // Source: https://node-postgres.com/apis/client#clientquery (text, values)
