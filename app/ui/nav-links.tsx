@@ -9,29 +9,30 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// `prefetch` is optional (the `?`): Book leaves it out and keeps the default.
-const LINKS: { href: string; label: string; prefetch?: false }[] = [
-  { href: "/", label: "Book" },
-  // prefetch={false}: prefetching /admin hits the Basic Auth gate in proxy.ts (401), so the browser would prompt on public pages. Source: node_modules/next/dist/docs/01-app/03-api-reference/02-components/link.md ("prefetch")
-  { href: "/admin", label: "Admin", prefetch: false },
-];
-
 export function NavLinks() {
   const pathname = usePathname();
 
   return (
     <>
-      {LINKS.map(({ href, label, prefetch }) => (
-        <Link
-          key={href}
-          href={href}
-          prefetch={prefetch}
-          className="bwai-topbar__link"
-          aria-current={pathname === href ? "page" : undefined}
-        >
-          {label}
-        </Link>
-      ))}
+      <Link
+        href="/"
+        className="bwai-topbar__link"
+        aria-current={pathname === "/" ? "page" : undefined}
+      >
+        Book
+      </Link>
+      {/* Admin is a plain anchor, not <Link>: /admin sits behind Basic Auth in
+          proxy.ts, so a full navigation gives one browser prompt (a
+          client-side fetch gave two). A plain anchor is never prefetched;
+          prefetching and client-side navigation are what <Link> adds to <a>.
+          Source: node_modules/next/dist/docs/01-app/03-api-reference/02-components/link.md */}
+      <a
+        href="/admin"
+        className="bwai-topbar__link"
+        aria-current={pathname === "/admin" ? "page" : undefined}
+      >
+        Admin
+      </a>
     </>
   );
 }
