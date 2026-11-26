@@ -9,9 +9,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const LINKS = [
+// `prefetch` is optional (the `?`): Book leaves it out and keeps the default.
+const LINKS: { href: string; label: string; prefetch?: false }[] = [
   { href: "/", label: "Book" },
-  { href: "/admin", label: "Admin" },
+  // prefetch={false}: prefetching /admin hits the Basic Auth gate in proxy.ts (401), so the browser would prompt on public pages. Source: node_modules/next/dist/docs/01-app/03-api-reference/02-components/link.md ("prefetch")
+  { href: "/admin", label: "Admin", prefetch: false },
 ];
 
 export function NavLinks() {
@@ -19,10 +21,11 @@ export function NavLinks() {
 
   return (
     <>
-      {LINKS.map(({ href, label }) => (
+      {LINKS.map(({ href, label, prefetch }) => (
         <Link
           key={href}
           href={href}
+          prefetch={prefetch}
           className="bwai-topbar__link"
           aria-current={pathname === href ? "page" : undefined}
         >
