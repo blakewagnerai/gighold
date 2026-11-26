@@ -135,8 +135,17 @@ function filesToScan(): string[] {
     // Each entry comes back as a path relative to `dir`, e.g.
     // "admin\page.tsx" on Windows.
     // Source: https://nodejs.org/docs/latest-v24.x/api/fs.html#fsreaddirsyncpath-options
+    //
+    // `encoding: "utf8"` is Node's default, so the result is the same; it is
+    // spelled out for the type checker. With an `encoding` key present, the
+    // call matches the first readdirSync overload, which returns string[]
+    // (node_modules/@types/node/fs.d.ts, line 2447). Without it, that
+    // overload does not apply, because its options object requires
+    // `encoding`, and the call falls to the third overload (line 2478),
+    // which returns string[] | NonSharedBuffer[].
     const entries = readdirSync(path.join(PROJECT_ROOT, dir), {
       recursive: true,
+      encoding: "utf8",
     });
     for (const entry of entries) {
       const relative = path.join(dir, entry).split(path.sep).join("/");
