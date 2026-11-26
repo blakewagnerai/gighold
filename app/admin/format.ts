@@ -42,6 +42,14 @@ export function shortId(id: string): string {
   return id.slice(0, 8);
 }
 
+// A Stripe event id ("evt_" plus about 24 characters) -> "…" and its last 8
+// characters. The end is kept, not the start: events about the same
+// PaymentIntent share their first characters. The page puts the full id in a
+// title attribute.
+export function shortEventId(id: string): string {
+  return id.length > 8 ? `…${id.slice(-8)}` : id;
+}
+
 // 15000 + "usd" -> "$150.00". Display only: the amount is never sent
 // anywhere from here. Dividing by 100 assumes a two-decimal currency, which
 // holds for USD, the only currency this app uses.
@@ -71,6 +79,23 @@ export function formatPhoenix(iso: string | null): string {
     timeStyle: "short",
   }).format(date);
   return `${text} MST`;
+}
+
+// The compact form the tables show: "Nov 25, 3:04 PM", with no year and no
+// zone, so the column stays narrow (M5.3 desktop fit). The column header says
+// MST, and the page puts formatPhoenix's full text in a title attribute.
+// Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat
+export function formatPhoenixCompact(iso: string | null): string {
+  if (!iso) return EMPTY;
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return EMPTY;
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: TIME_ZONE,
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(date);
 }
 
 // Narrows a plain string from the database to one of the six statuses, so
